@@ -19,42 +19,19 @@ model User {
   email     String   @unique
   password  String  
   phone     String
-  account   Account? @relation(fields:[accountId], references: [id])
-  accountId Int? @unique
-}
-
-model Account {
-  id       Int   @id @default(autoincrement())
   sale     Float
   credit   Float
   credit_used   Float
-  User User? @relation
-  paymentList PaymentList? @relation(fields: [paymentListId], references: [id])
-  paymentListId Int? @unique
-  mouthPayment MouthPayment @relation(fields: [mouthPaymentId], references: [id])
-  mouthPaymentId Int @unique
+  paymentList PaymentList[]
 }
+
 
 model PaymentList {
   id           Int          @id @default(autoincrement())
   name_payment String @unique
   value       Float
-  account Account? @relation
+  userCpf String
+  user User @relation(fields: [userCpf], references: [cpf])
 }
 
-model MouthPayment {
-  id           Int          @id @default(autoincrement())
-  name String 
-  value       Float
-  account Account? @relation
-  mouthPayment weekPayment? @relation(fields:[weekPaymentId], references: [id])
-  weekPaymentId Int @unique
-}
-
-model weekPayment {
-  id          Int          @id @default(autoincrement())
-  week        String 
-  value       Float
-  mouthPayment MouthPayment? @relation()
-}
 

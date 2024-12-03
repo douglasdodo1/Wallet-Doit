@@ -1,7 +1,6 @@
 import prisma from '../prisma_client.js';
 
-
-export const UserRepository = (data) =>{
+export const UserRepository = () =>{
     const createUser = async (data) => {
         try {
             return await prisma.user.create({
@@ -11,6 +10,9 @@ export const UserRepository = (data) =>{
                     email: data.email,
                     password: data.password,
                     phone: data.phone,
+                    sale: data.sale,
+                    credit: data.credit,
+                    credit_used: 0
                 },
             });
         } catch (error) {
