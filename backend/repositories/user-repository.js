@@ -20,9 +20,39 @@ export const UserRepository = () =>{
             throw new Error('Erro ao salvar o usuário');
         }
     }
-    return {
-        createUser,
+
+    const readUser = async (cpf) => {
+        try {
+            return await prisma.user.findUnique({
+                where: {
+                    cpf: cpf
+                },
+            })
+        } catch (error) {
+            console.error(error);
+            throw new Error('Erro ao ler o usuário');
+        }
     }
+
+    const updateUser = async (cpf, data) => {
+        try {
+            return await prisma.user.update({
+                where: {
+                    cpf: cpf
+                },
+                data: data, // Atualiza o usuário com os dados fornecidos
+            });
+        } catch (error) {
+            console.error(error);
+            throw new Error('Erro ao atualizar o usuário');
+        }
+    };
+    
+
+    return {
+        createUser, readUser, updateUser
+    }
+
 }
 
 export default UserRepository;
