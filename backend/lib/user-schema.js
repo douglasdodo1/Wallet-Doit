@@ -2,7 +2,7 @@ import * as yup from "yup";
 
 export const UserSchema = () =>{
     return yup.object({
-        cpf: yup.string().min().required(),
+        cpf: yup.string().min(11).required(),
         name: yup.string().required(),
         email: yup.string().email().required(),
         password: yup.string().min(0).required(),
