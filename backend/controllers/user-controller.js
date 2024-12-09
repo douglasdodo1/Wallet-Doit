@@ -1,5 +1,6 @@
 import UserService from '../services/user-service.js';
 import { UserSchema } from '../lib/user-schema.js';
+import bcrypt from 'bcrypt';
 
 const userSchema = UserSchema(); 
 
@@ -8,9 +9,11 @@ const UserController = () => {
             if (!userSchema.validate(req.body,{abortEarly:false})) {
                 return res.status(400).json({ error: error.message });
             }
+            console.log(req.body);
+            
+            req.body.password = await bcrypt.hash(req.body.password,10)
             const user = await UserService.create(req.body);
             return res.status(201).json(user); 
-        
     }
 
     const readUser = async (req,res) =>{
