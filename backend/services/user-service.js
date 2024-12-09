@@ -16,10 +16,8 @@ class UserService {
     };
 
     static update = async (cpf, data) => {
-        console.log('aqui:');
-        console.log(data);
     
-        const user = await userRepo.readUser(cpf); // cpf já é uma string
+        const user = await userRepo.readUser(cpf);
         if (!user) {
             return null;
         }
