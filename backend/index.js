@@ -14,7 +14,6 @@ const paymentListController = PaymentListController();
 const authController = AuthController();
 const authenticateToken = AuthMiddleWare();
 
-
 app.use(express.json());
  
 app.get('/', (req, res) => {
