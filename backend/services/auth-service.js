@@ -21,6 +21,7 @@ export const AuthService = () => {
         }
 
         const token = jwt.sign({ cpf }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
         return token
         
     }
