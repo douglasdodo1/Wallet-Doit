@@ -18,6 +18,8 @@ class MenuPageState extends State<MenuPage> {
     setState(() {
       _stateButton = buttonIsPressed;
     });
+    _isFocused = false;
+    print(_stateButton);
   }
 
   void _receiveStateInput(bool isFocusedInput) {
@@ -52,7 +54,7 @@ class MenuPageState extends State<MenuPage> {
             ),
             if (_isFocused)
               Container(
-                color: Colors.black.withOpacity(0.9), 
+                color: Colors.black.withOpacity(0.9),
               ),
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -66,8 +68,8 @@ class MenuPageState extends State<MenuPage> {
                             onInputPressed: _receiveStateInput,
                           )
                         : RegisterWidget(
-                          onInputPressed: _receiveStateInput,
-                        ),
+                            onInputPressed: _receiveStateInput,
+                          ),
                   ),
                   const SizedBox(height: 20),
                   MenuButtonLoginRegister(
