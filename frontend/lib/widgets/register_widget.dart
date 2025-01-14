@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class RegisterWidget extends StatefulWidget {
-  const RegisterWidget({super.key});
+  final void Function(bool) onInputPressed;
+  const RegisterWidget({super.key,
+  required this.onInputPressed});
 
   @override
   RegisterWidgetState createState() => RegisterWidgetState();
 }
 
 class RegisterWidgetState extends State<RegisterWidget> {
-  final FocusNode _usernameFocusNode = FocusNode();
-  final FocusNode _passwordFocusNode = FocusNode();
   final Map<String, FocusNode> _inputs = {
     'CPF': FocusNode(),
     'Name': FocusNode(),
@@ -31,8 +31,8 @@ class RegisterWidgetState extends State<RegisterWidget> {
 
   void _updateFocusState() {
     setState(() {
-      _isInputFocused =
-          _usernameFocusNode.hasFocus || _passwordFocusNode.hasFocus;
+      _isInputFocused = _inputs.values.any((node) => node.hasFocus);
+      widget.onInputPressed(_isInputFocused);
     });
   }
 
@@ -50,124 +50,65 @@ class RegisterWidgetState extends State<RegisterWidget> {
     return Stack(
       children: [
         if (_isInputFocused)
-          Container(
-            color: Colors.black.withOpacity(0.5), // Camada escura
+          GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: Container(
+              color: Colors.black.withOpacity(0.5),
+            ),
           ),
         Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(
-                  width: 300,
-                  child: TextField(
-                    focusNode: _inputs['CPF'],
-                    decoration: const InputDecoration(
-                      labelText: 'CPF',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white, // Cor da borda
-                          width: 4, // Largura da borda
-                        ),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white, // Cor da borda quando em foco
-                          width: 5, // Largura da borda em foco
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: 300,
-                  child: TextField(
-                    focusNode: _inputs['Username'],
-                    decoration: const InputDecoration(
-                      labelText: 'Username',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white, // Cor da borda
-                          width: 4, // Largura da borda
-                        ),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white, // Cor da borda quando em foco
-                          width: 5, // Largura da borda em foco
+                ..._inputs.entries.map((entry) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: SizedBox(
+                      width: 300,
+                      child: TextField(
+                        focusNode: entry.value,
+                        decoration: InputDecoration(
+                          labelText: entry.key,
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                              width: 2,
+                            ),
+                          ),
+                          focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue,
+                              width: 2,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: 300,
-                  child: TextField(
-                    focusNode: _inputs['E-mail'],
-                    decoration: const InputDecoration(
-                      labelText: 'E-mail',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white, // Cor da borda
-                          width: 4, // Largura da borda
-                        ),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white, // Cor da borda quando em foco
-                          width: 5, // Largura da borda em foco
-                        ),
-                      ),
+                  );
+                }).toList(),
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Sign up realizado')),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(150, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero,
+                    ),
+                    side: const BorderSide(
+                      color: Color.fromARGB(255, 221, 221, 221),
+                      width: 2,
                     ),
                   ),
+                  child: const Text('Sign up'),
                 ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: 300,
-                  child: TextField(
-                    focusNode: _inputs['Number'],
-                    decoration: const InputDecoration(
-                      labelText: 'Number',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white, // Cor da borda
-                          width: 4, // Largura da borda
-                        ),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white, // Cor da borda quando em foco
-                          width: 5, // Largura da borda em foco
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: 300,
-                  child: TextField(
-                    focusNode: _inputs['Password'],
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white, // Cor da borda
-                          width: 4, // Largura da borda
-                        ),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white, // Cor da borda quando em foco
-                          width: 5, // Largura da borda em foco
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
               ],
             ),
           ),

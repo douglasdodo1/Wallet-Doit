@@ -36,7 +36,6 @@ class MenuButtonLoginRegisterState extends State<MenuButtonLoginRegister> {
       if (!_isButton2Pressed) {
         _isButton1Pressed = !_isButton1Pressed;
         _isButton2Pressed = !_isButton2Pressed;
-
         widget.onButtonStateChanged(true);
       }
     });
