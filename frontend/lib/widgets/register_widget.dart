@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 class RegisterWidget extends StatefulWidget {
   final void Function(bool) onInputPressed;
-  const RegisterWidget({super.key,
-  required this.onInputPressed});
+  const RegisterWidget({super.key, required this.onInputPressed});
 
   @override
   RegisterWidgetState createState() => RegisterWidgetState();
@@ -89,7 +88,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                       ),
                     ),
                   );
-                }).toList(),
+                }),
                 const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () {
