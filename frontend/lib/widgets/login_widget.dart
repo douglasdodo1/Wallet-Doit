@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class LoginWidget extends StatefulWidget {
   final void Function(bool) onInputPressed;
 
-  const LoginWidget({super.key,
-  required this.onInputPressed});
+  const LoginWidget({super.key, required this.onInputPressed});
 
   @override
   State<LoginWidget> createState() => _LoginWidgetState();
@@ -13,8 +12,6 @@ class LoginWidget extends StatefulWidget {
 class _LoginWidgetState extends State<LoginWidget> {
   final FocusNode _usernameFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
-
-  bool _isInputFocused = false;
 
   @override
   void initState() {
@@ -25,9 +22,6 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   void _updateFocusState() {
     final hasFocus = _usernameFocusNode.hasFocus || _passwordFocusNode.hasFocus;
-    setState(() {
-      _isInputFocused = hasFocus;
-    });
     widget.onInputPressed(hasFocus); // Notifica a MenuPage sobre o estado
   }
 
