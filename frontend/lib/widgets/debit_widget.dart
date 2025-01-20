@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DebitWidget extends StatefulWidget {
-  const DebitWidget({super.key});
+  final double debit;
+  const DebitWidget({super.key, required this.debit});
 
   @override
   DebitWidgetState createState() => DebitWidgetState();
@@ -19,38 +20,40 @@ class DebitWidgetState extends State<DebitWidget> {
             child: SizedBox(),
           ),
           Expanded(
-              flex: 7,
+            flex: 7,
+            child: FractionallySizedBox(
+              heightFactor: 1,
               child: FractionallySizedBox(
-                  heightFactor: 1,
+                heightFactor: 0.6,
+                child: SizedBox(
                   child: FractionallySizedBox(
-                    heightFactor: 0.6,
-                    child: SizedBox(
-                      child: FractionallySizedBox(
-                        widthFactor: 0.8,
-                        heightFactor: 1,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 44, 57, 51),
-                              border: Border.all(color: Colors.black, width: 2),
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(width: 10),
-                              Text(
-                                "RS:",
-                                style: TextStyle(
-                                    fontSize: 28, color: Colors.white),
-                              ),
-                              Text("1234,56",
-                                  style: TextStyle(
-                                      fontSize: 50, color: Colors.white))
-                            ],
+                    widthFactor: 0.8,
+                    heightFactor: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 44, 57, 51),
+                        border: Border.all(color: Colors.black, width: 2),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(width: 10),
+                          Text(
+                            "R\$:",
+                            style: TextStyle(fontSize: 28, color: Colors.white),
                           ),
-                        ),
+                          Text(widget.debit.toStringAsFixed(2),
+                              style:
+                                  TextStyle(fontSize: 50, color: Colors.white))
+                        ],
                       ),
                     ),
-                  ))),
+                  ),
+                ),
+              ),
+            ),
+          ),
           Expanded(
             flex: 1,
             child: SizedBox(
