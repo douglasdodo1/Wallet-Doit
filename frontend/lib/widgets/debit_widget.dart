@@ -39,10 +39,9 @@ class DebitWidgetState extends State<DebitWidget> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(width: 10),
-                          Text(
-                            "R\$:",
-                            style: TextStyle(fontSize: 28, color: Colors.white),
-                          ),
+                          Text("R\$:",
+                              style:
+                                  TextStyle(fontSize: 28, color: Colors.white)),
                           Text(widget.debit.toStringAsFixed(2),
                               style:
                                   TextStyle(fontSize: 50, color: Colors.white))

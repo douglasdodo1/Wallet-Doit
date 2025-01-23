@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/widgets/creditWidgets/credit_widget.dart';
 import 'package:frontend/widgets/debit_widget.dart';
+import 'package:frontend/widgets/month_payment.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
@@ -36,6 +37,7 @@ class MyHomePage extends StatelessWidget {
               flex: 3,
               child: Container(
                 color: Color.fromARGB(255, 250, 250, 250),
+                child: MouthPayment(),
               ),
             ),
             Container(
