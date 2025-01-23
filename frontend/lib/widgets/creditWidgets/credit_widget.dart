@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'credit_progress_bar.dart';
+import 'package:frontend/widgets/creditWidgets/credit_progress_bar.dart';
 
 class CreditWidget extends StatefulWidget {
   final double creditUsed;
