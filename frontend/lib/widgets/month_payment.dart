@@ -29,83 +29,86 @@ class MouthPaymentState extends State<MouthPayment> {
     500,
   ];
 
+  double calculateInterval(List<double> numbers) {
+    double bigger = numbers.reduce((a, b) => a > b ? a : b);
+    return bigger / 5;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      widthFactor: 1,
-      heightFactor: 1,
-      child: Container(
-        decoration:
-            BoxDecoration(border: Border.all(color: Colors.black, width: 2)),
-        child: Padding(
-          padding: const EdgeInsets.all(4),
-          child: BarChart(
-            BarChartData(
-              barGroups: payments.asMap().entries.map((entry) {
-                final index = entry.key;
-                final value = entry.value;
+    return Container(
+      decoration:
+          BoxDecoration(border: Border.all(color: Colors.black, width: 2)),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(6, 10, 2, 0),
+        child: BarChart(
+          BarChartData(
+            barGroups: payments.asMap().entries.map((entry) {
+              final index = entry.key;
+              final value = entry.value;
 
-                return BarChartGroupData(
-                  x: index,
-                  barRods: [
-                    BarChartRodData(
-                      toY: value,
-                      color: Colors.blue,
-                      width: 20,
+              return BarChartGroupData(
+                x: index,
+                barRods: [
+                  BarChartRodData(
+                    toY: value,
+                    color: const Color.fromARGB(255, 0, 168, 107),
+                    width: 33,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(4),
+                      topRight: Radius.circular(4),
                     ),
-                  ],
-                );
-              }).toList(),
-              titlesData: FlTitlesData(
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    interval:
-                        50, // Ajuste o intervalo para evitar sobrecarga de títulos
-                    reservedSize:
-                        35, // Ajuste o espaço reservado para os títulos do lado esquerdo
-                    getTitlesWidget: (value, meta) {
+                  ),
+                ],
+              );
+            }).toList(),
+            titlesData: FlTitlesData(
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  interval: calculateInterval(payments),
+                  reservedSize: 35,
+                  getTitlesWidget: (value, meta) {
+                    return Text(
+                      '${value.toInt()}',
+                      style: const TextStyle(fontSize: 14),
+                    );
+                  },
+                ),
+              ),
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 40,
+                  getTitlesWidget: (value, meta) {
+                    final index = value.toInt();
+                    if (index >= 0 && index < months.length) {
                       return Text(
-                        '${value.toInt()}',
-                        style: const TextStyle(fontSize: 14),
+                        months[index],
+                        style: const TextStyle(fontSize: 12),
                       );
-                    },
-                  ),
-                ),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 40,
-                    getTitlesWidget: (value, meta) {
-                      final index = value.toInt();
-                      if (index >= 0 && index < months.length) {
-                        return Text(
-                          months[index],
-                          style: const TextStyle(fontSize: 12),
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                ),
-                topTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                rightTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
+                    }
+                    return const SizedBox.shrink();
+                  },
                 ),
               ),
-              borderData: FlBorderData(
-                show: true,
-                border: const Border.symmetric(
-                  horizontal: BorderSide(color: Colors.black),
-                  vertical: BorderSide(color: Colors.black),
-                ),
+              topTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
               ),
-              gridData: FlGridData(show: true),
-              barTouchData: BarTouchData(
-                enabled: false, // Desativa todas as interações com as barras
+              rightTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
               ),
+            ),
+            borderData: FlBorderData(
+              show: true,
+              border: const Border.symmetric(
+                horizontal: BorderSide(color: Colors.black),
+                vertical: BorderSide(color: Colors.black),
+              ),
+            ),
+            gridData: FlGridData(show: true),
+            barTouchData: BarTouchData(
+              enabled: false,
             ),
           ),
         ),
