@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/widgets/creditWidgets/credit_widget.dart';
-import 'package:frontend/widgets/debit_widget.dart';
-import 'package:frontend/widgets/month_payment.dart';
+import 'package:frontend/widgets/homeWidgets/debit_widget.dart';
+import 'package:frontend/widgets/homeWidgets/month_payment.dart';
+import 'package:frontend/widgets/homeWidgets/payment_list_widget.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
@@ -10,12 +11,9 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 250, 250, 250),
-        toolbarHeight: 150,
-        title: DebitWidget(
-          debit: 1000.00,
-        ),
-      ),
+          backgroundColor: Color.fromARGB(255, 250, 250, 250),
+          toolbarHeight: 150,
+          title: DebitWidget(debit: 1000.00)),
       body: SizedBox.expand(
         child: Column(
           children: <Widget>[
@@ -26,19 +24,14 @@ class MyHomePage extends StatelessWidget {
             Expanded(
               flex: 3,
               child: Container(
-                color: Color.fromARGB(255, 250, 250, 250),
-                child: CreditWidget(
-                  creditUsed: 200,
-                  credit: 500,
-                ),
-              ),
+                  color: Color.fromARGB(255, 250, 250, 250),
+                  child: CreditWidget(creditUsed: 200, credit: 500)),
             ),
             Expanded(
               flex: 3,
               child: Container(
-                color: Color.fromARGB(255, 250, 250, 250),
-                child: MouthPayment(),
-              ),
+                  color: Color.fromARGB(255, 250, 250, 250),
+                  child: MouthPayment()),
             ),
             Container(
               height: 2,
@@ -47,16 +40,13 @@ class MyHomePage extends StatelessWidget {
             Expanded(
               flex: 4,
               child: Container(
-                color: const Color.fromARGB(255, 255, 0, 0),
-              ),
+                  color: Color.fromARGB(255, 250, 250, 250),
+                  child: PaymentListWidget()),
             )
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        height: 80,
-        color: Colors.yellow,
-      ),
+      bottomNavigationBar: Container(height: 80, color: Colors.yellow),
     );
   }
 }

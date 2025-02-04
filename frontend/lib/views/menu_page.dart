@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/widgets/login_widget.dart';
-import 'package:frontend/widgets/register_widget.dart';
-import '../widgets/menu_button_login_register.dart';
+import 'package:frontend/widgets/menuWidgets/login_widget.dart';
+import 'package:frontend/widgets/menuWidgets/register_widget.dart';
+import '../widgets/menuWidgets/menu_button_login_register.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
