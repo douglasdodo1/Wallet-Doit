@@ -37,10 +37,15 @@ class MouthPaymentState extends State<MouthPayment> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration:
-          BoxDecoration(border: Border.all(color: Colors.black, width: 2)),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(color: Colors.black, width: 2),
+          left: BorderSide(color: Colors.black, width: 2),
+          right: BorderSide(color: Colors.black, width: 2),
+        ),
+      ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(6, 10, 2, 0),
+        padding: const EdgeInsets.fromLTRB(6, 20, 2, 0),
         child: BarChart(
           BarChartData(
             barGroups: payments.asMap().entries.map((entry) {

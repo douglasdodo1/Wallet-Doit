@@ -17,7 +17,7 @@ model User {
   cpf       String   @id @default(uuid())
   name      String
   email     String   @unique
-  password  String  
+  password  String
   phone     String
   sale     Float
   credit   Float
