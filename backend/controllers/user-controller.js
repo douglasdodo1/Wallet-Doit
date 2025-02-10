@@ -13,7 +13,7 @@ const UserController = () => {
             
             req.body.password = await bcrypt.hash(req.body.password,10)
             const user = await UserService.create(req.body);
-            return res.status(201).json(user); 
+            return res.status(201).json(user);
     }
 
     const readUser = async (req,res) =>{
