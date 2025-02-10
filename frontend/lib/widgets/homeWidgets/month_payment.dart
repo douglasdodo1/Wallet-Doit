@@ -40,8 +40,6 @@ class MouthPaymentState extends State<MouthPayment> {
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(color: Colors.black, width: 2),
-          left: BorderSide(color: Colors.black, width: 2),
-          right: BorderSide(color: Colors.black, width: 2),
         ),
       ),
       child: Padding(
@@ -90,7 +88,7 @@ class MouthPaymentState extends State<MouthPayment> {
                     if (index >= 0 && index < months.length) {
                       return Text(
                         months[index],
-                        style: const TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 15),
                       );
                     }
                     return const SizedBox.shrink();
