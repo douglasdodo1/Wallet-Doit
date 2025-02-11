@@ -22,23 +22,35 @@ app.get('/', (req, res) => {
 });
 
 app.post('/create-user', (req, res) => {
-    userController.createUser(req, res)
+    userController.createUser(req, res);
 });
 
 app.post('/create-payment-list', authenticateToken, (req, res) => {
-    paymentListController.createPaymentList(req, res)
+    paymentListController.createPaymentList(req, res);
+});
+
+app.get('/payment-list', authenticateToken, (req, res) => {
+    paymentListController.readPaymentList(req, res);
+});
+
+app.get('/read-all-payment-list', authenticateToken, (req, res) => {
+    paymentListController.readAllpaymentList(req, res);
+});
+
+app.put('/update-payment-list/:id', authenticateToken, (req, res) => {
+    paymentListController.updatePaymentList(req, res);
 });
 
 app.get('/user', authenticateToken, (req, res) => {
-    userController.readUser(req, res)
+    userController.readUser(req, res);
 });
 
 app.put('/user/:cpf', authenticateToken, (req, res) =>{
-    userController.updateUser(req, res)
+    userController.updateUser(req, res);
 })
 
 app.post('/login', async (req, res) =>{
-    authController.auth(req, res)
+    authController.auth(req, res);
 })
 
 app.listen(port, () => {

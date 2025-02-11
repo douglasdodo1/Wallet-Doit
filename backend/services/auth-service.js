@@ -29,4 +29,4 @@ export const AuthService = () => {
     }
 }
 
-export default AuthService; 
+export default AuthService;
