@@ -16,12 +16,11 @@ class UserService {
     };
 
     static update = async (cpf, data) => {
-    
         const user = await userRepo.readUser(cpf);
         if (!user) {
             return null;
         }
-    
+
         return await userRepo.updateUser(cpf, data);
     };
 }
