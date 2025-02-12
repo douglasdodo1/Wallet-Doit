@@ -29,8 +29,9 @@ model User {
 model PaymentList {
   id           Int          @id @default(autoincrement())
   name_payment String @unique
-  value       Float
-  userCpf String
+  value        Float
+  userCpf      String
+  iconCode     String?
   user User @relation(fields: [userCpf], references: [cpf])
 }
 
