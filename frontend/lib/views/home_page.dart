@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/widgets/homeWidgets/paymentWidgets/payment_list_widget.dart';
+import 'package:frontend/widgets/homeWidgets/payment_list_widget.dart';
 import 'package:frontend/widgets/menuWidgets/creditWidgets/credit_widget.dart';
 import 'package:frontend/widgets/homeWidgets/debit_widget.dart';
 import 'package:frontend/widgets/homeWidgets/month_payment.dart';
