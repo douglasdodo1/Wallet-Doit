@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/widgets/homeWidgets/paymentWidgets/card_payment_widget.dart';
-import 'modal_widget.dart';
+import 'package:frontend/widgets/homeWidgets/paymentWidgets/modal_new_payment.dart';
+import 'paymentWidgets/modal_widget.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class PaymentListWidget extends StatefulWidget {
   const PaymentListWidget({super.key});
@@ -10,27 +13,68 @@ class PaymentListWidget extends StatefulWidget {
 }
 
 class PaymentListWidgetState extends State<PaymentListWidget> {
-  final List<String> payments = [
-    'dividas',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-  ];
+  List payments = [];
+  var payment = {'name_payment': '', 'value': '', 'iconCode': ''};
+
+  Future<void> fetchData() async {
+    final response = await http.get(
+      Uri.parse('http://192.168.18.212:3000/read-all-payment-list'),
+      headers: {
+        'Authorization':
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTczOTg0NzY5OCwiZXhwIjoxNzM5ODUxMjk4fQ.pOeKW7WknReFgbJ_S_UqgMIjAcSgQEGet3IbgRG24IA',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 201) {
+      setState(() {
+        var data = json.decode(response.body);
+        payments = data;
+      });
+    }
+  }
+
+  Future<void> sendData(payment) async {
+    final response = await http.post(
+        Uri.parse('http://192.168.18.212:3000/create-payment-list'),
+        headers: {
+          'Authorization':
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTczOTg0NzY5OCwiZXhwIjoxNzM5ODUxMjk4fQ.pOeKW7WknReFgbJ_S_UqgMIjAcSgQEGet3IbgRG24IA',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode(payment));
+
+    if (response.statusCode == 200) {
+      var f = jsonDecode(response.body);
+      print("The payment: $f");
+    } else {
+      print(
+          "Erro ao enviar pagamento: ${response.statusCode} - ${response.body}");
+    }
+  }
 
   bool _isDragging = false;
   final GlobalKey _trashKey = GlobalKey();
   final ValueNotifier<bool> _isOverTrashNotifier = ValueNotifier<bool>(false);
 
-  void _showPaymentDialog(String name, double value) {
+  void _showPaymentModal(String name, double value) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return ModalWidget(paymentName: name, paymentValue: value);
       },
     );
+  }
+
+  void _showNewPaymentModal(payment) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ModalNewPayment(
+          payment: payment,
+        );
+      },
+    ).then((_) => sendData(payment)).then((_) => fetchData());
   }
 
   bool _checkIfInsideTrash(Offset position) {
@@ -52,14 +96,48 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
       heightFactor: 0.8,
       widthFactor: 0.8,
       child: Column(
         children: [
-          const Text('Payment list',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          SizedBox(
+            child: Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () => _showNewPaymentModal(payment),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 250, 250, 250),
+                    elevation: 0,
+                    side: BorderSide.none,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  child: Row(
+                    children: [
+                      const Text("Payment list"),
+                      Icon(
+                        Icons.add_circle_outline,
+                        color: Colors.green,
+                        size: 20,
+                      ),
+                    ],
+                  ),
+                ),
+                Spacer(),
+                Text('02/25',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
           Expanded(
             child: Stack(
               children: [
@@ -80,8 +158,8 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
                     ),
                     itemCount: payments.length,
                     itemBuilder: (context, index) {
-                      return Draggable<String>(
-                        data: payments[index],
+                      return Draggable<Object>(
+                        data: payments[index]['name_payment'] as String?,
                         onDragStarted: () {
                           setState(() {
                             _isDragging = true;
@@ -104,8 +182,8 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
                         },
                         childWhenDragging: Opacity(
                           opacity: 0.5,
-                          child:
-                              CardPaymentWidget(paymentName: payments[index]),
+                          child: CardPaymentWidget(
+                              paymentName: payments[index]['name_payment']),
                         ),
                         feedback: ValueListenableBuilder<bool>(
                           valueListenable: _isOverTrashNotifier,
@@ -116,16 +194,22 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
                                 width: isOverTrash ? 100 : 60,
                                 height: isOverTrash ? 100 : 60,
                                 child: CardPaymentWidget(
-                                    paymentName: payments[index]),
+                                    paymentName: payments[index]
+                                        ['name_payment']),
                               ),
                             );
                           },
                         ),
                         child: GestureDetector(
-                          onTap: () =>
-                              _showPaymentDialog(payments[index], 50.00),
-                          child:
-                              CardPaymentWidget(paymentName: payments[index]),
+                          onTap: () => _showPaymentModal(
+                            payments[index]
+                                ['name_payment'], // Use o índice do mapa
+                            50.00,
+                          ),
+                          child: CardPaymentWidget(
+                            paymentName: payments[index]
+                                ['name_payment'], // Acessando como um mapa
+                          ),
                         ),
                       );
                     },

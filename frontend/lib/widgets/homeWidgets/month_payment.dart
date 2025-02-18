@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 
 class MouthPayment extends StatefulWidget {
   const MouthPayment({super.key});
@@ -11,22 +10,7 @@ class MouthPayment extends StatefulWidget {
 }
 
 class MouthPaymentState extends State<MouthPayment> {
-  List payments = [];
-
-  Future<void> fetchData() async {
-    final response = await http
-        .get(Uri.parse('https://localhost:3000/read-all-payment-list'));
-
-    if (response.statusCode == 200) {
-      // Se a requisição for bem-sucedida, processa os dados
-      var data = json.decode(response.body);
-      payments = data;
-      print(data);
-    } else {
-      // Se a requisição falhar
-      print('Erro na requisição: ${response.statusCode}');
-    }
-  }
+  List months = ['jan', 'feb', 'marc', 'april', 'mai', 'jun'];
 
   final List<double> paymentsValues = [
     100,
