@@ -21,7 +21,7 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
       Uri.parse('http://192.168.18.212:3000/read-all-payment-list'),
       headers: {
         'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTczOTg0NzY5OCwiZXhwIjoxNzM5ODUxMjk4fQ.pOeKW7WknReFgbJ_S_UqgMIjAcSgQEGet3IbgRG24IA',
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDAxOTc3MCwiZXhwIjoxNzQwMDIzMzcwfQ.hA6F7qT2n4Uf3suujSuIbsYkC1ky6iww52b3iOoqEH8',
         'Content-Type': 'application/json',
       },
     );
@@ -39,7 +39,7 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
         Uri.parse('http://192.168.18.212:3000/create-payment-list'),
         headers: {
           'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTczOTg0NzY5OCwiZXhwIjoxNzM5ODUxMjk4fQ.pOeKW7WknReFgbJ_S_UqgMIjAcSgQEGet3IbgRG24IA',
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDAxOTc3MCwiZXhwIjoxNzQwMDIzMzcwfQ.hA6F7qT2n4Uf3suujSuIbsYkC1ky6iww52b3iOoqEH8',
           'Content-Type': 'application/json'
         },
         body: jsonEncode(payment));
@@ -75,6 +75,14 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
         );
       },
     ).then((_) => sendData(payment)).then((_) => fetchData());
+  }
+
+  int _getIconCode(code) {
+    if (code == null || code == '') {
+      return 58136;
+    }
+
+    return int.parse(code);
   }
 
   bool _checkIfInsideTrash(Offset position) {
@@ -158,6 +166,8 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
                     ),
                     itemCount: payments.length,
                     itemBuilder: (context, index) {
+                      int iconCode =
+                          _getIconCode((payments[index]['iconCode']));
                       return Draggable<Object>(
                         data: payments[index]['name_payment'] as String?,
                         onDragStarted: () {
@@ -183,7 +193,8 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
                         childWhenDragging: Opacity(
                           opacity: 0.5,
                           child: CardPaymentWidget(
-                              paymentName: payments[index]['name_payment']),
+                              paymentName: payments[index]['name_payment'],
+                              iconCode: iconCode),
                         ),
                         feedback: ValueListenableBuilder<bool>(
                           valueListenable: _isOverTrashNotifier,
@@ -191,11 +202,12 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
                             return Material(
                               color: Colors.transparent,
                               child: SizedBox(
-                                width: isOverTrash ? 100 : 60,
-                                height: isOverTrash ? 100 : 60,
+                                width: 100,
+                                height: 100,
                                 child: CardPaymentWidget(
-                                    paymentName: payments[index]
-                                        ['name_payment']),
+                                  paymentName: payments[index]['name_payment'],
+                                  iconCode: iconCode,
+                                ),
                               ),
                             );
                           },
@@ -207,8 +219,8 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
                             50.00,
                           ),
                           child: CardPaymentWidget(
-                            paymentName: payments[index]
-                                ['name_payment'], // Acessando como um mapa
+                            paymentName: payments[index]['name_payment'],
+                            iconCode: iconCode,
                           ),
                         ),
                       );
