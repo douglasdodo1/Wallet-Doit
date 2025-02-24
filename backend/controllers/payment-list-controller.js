@@ -65,13 +65,14 @@ const PaymentListController = () => {
 
   const deletePaymentList = async (req, res) => {
     try {
-      const paymentTodelete = req.body;
-      if (!paymentTodelete.id || !cpf) {
+      const { id } = req.params;
+      console.log("to no controller");
+
+      if (!id) {
         return res.status(400).json({ error: error.message });
       }
-      const paymentDeleted = await paymentListService.deletePayment(
-        paymentTodelete.id
-      );
+
+      const paymentDeleted = await paymentListService.deletePayment(id);
 
       res.status(201).json(paymentDeleted);
     } catch (error) {
