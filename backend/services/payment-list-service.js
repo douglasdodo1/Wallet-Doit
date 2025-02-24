@@ -48,12 +48,17 @@ export const PaymentListService = () => {
   };
 
   const deletePayment = async (data) => {
-    const paymentChecked = await paymentListRepository.read();
+    data = parseInt(data);
+    console.log("to no service");
+    console.log(data);
+
+    const paymentChecked = await paymentListRepository.read(data);
+    console.log(paymentChecked);
 
     if (paymentChecked === null) {
       throw new Error("payment not found");
     }
-    const deletedPayment = await paymentListRepository.delete(data);
+    const deletedPayment = await paymentListRepository.deletePayment(data);
 
     if (deletedPayment == null) {
       throw new Error("payment not deleted");

@@ -69,7 +69,7 @@ export const PaymentListRepository = () => {
     try {
       return await prisma.paymentList.delete({
         where: {
-          id: data.id,
+          id: data,
         },
       });
     } catch (error) {

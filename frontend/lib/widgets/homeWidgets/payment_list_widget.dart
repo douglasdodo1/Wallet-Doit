@@ -18,10 +18,10 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
 
   Future<void> fetchData() async {
     final response = await http.get(
-      Uri.parse('http://192.168.18.212:3000/read-all-payment-list'),
+      Uri.parse('http://192.168.18.212:3000/payments/all'),
       headers: {
         'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDAxOTc3MCwiZXhwIjoxNzQwMDIzMzcwfQ.hA6F7qT2n4Uf3suujSuIbsYkC1ky6iww52b3iOoqEH8',
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDE2NTIzMywiZXhwIjoxNzQwMTY4ODMzfQ.5hPhY5JxtZO5wQkaTalOtgrpQvE2zocDfD5JnojpEpA',
         'Content-Type': 'application/json',
       },
     );
@@ -35,14 +35,14 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
   }
 
   Future<void> sendData(payment) async {
-    final response = await http.post(
-        Uri.parse('http://192.168.18.212:3000/create-payment-list'),
-        headers: {
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDAxOTc3MCwiZXhwIjoxNzQwMDIzMzcwfQ.hA6F7qT2n4Uf3suujSuIbsYkC1ky6iww52b3iOoqEH8',
-          'Content-Type': 'application/json'
-        },
-        body: jsonEncode(payment));
+    final response =
+        await http.post(Uri.parse('http://192.168.18.212:3000/payments'),
+            headers: {
+              'Authorization':
+                  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDE2NTIzMywiZXhwIjoxNzQwMTY4ODMzfQ.5hPhY5JxtZO5wQkaTalOtgrpQvE2zocDfD5JnojpEpA',
+              'Content-Type': 'application/json'
+            },
+            body: jsonEncode(payment));
 
     if (response.statusCode == 200) {
       var f = jsonDecode(response.body);
@@ -53,9 +53,29 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
     }
   }
 
+  Future<void> deleteData(String paymentId) async {
+    final response = await http.delete(
+      Uri.parse('http://192.168.18.212:3000/payments/$paymentId'),
+      headers: {
+        'Authorization':
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDE2NTIzMywiZXhwIjoxNzQwMTY4ODMzfQ.5hPhY5JxtZO5wQkaTalOtgrpQvE2zocDfD5JnojpEpA',
+        'Content-Type': 'application/json'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var f = jsonDecode(response.body);
+      print("Pagamento deletado: $f");
+    } else {
+      print(
+          "Erro ao deletar pagamento: ${response.statusCode} - ${response.body}");
+    }
+  }
+
   bool _isDragging = false;
   final GlobalKey _trashKey = GlobalKey();
   final ValueNotifier<bool> _isOverTrashNotifier = ValueNotifier<bool>(false);
+  Map<String, dynamic> draggedPayment = {};
 
   void _showPaymentModal(String name, double value) {
     showDialog(
@@ -93,10 +113,10 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
       final Offset trashPosition = trashBox.localToGlobal(Offset.zero);
       final Size trashSize = trashBox.size;
 
-      bool inside = position.dx >= trashPosition.dx &&
-          position.dx <= trashPosition.dx + trashSize.width &&
-          position.dy >= trashPosition.dy &&
-          position.dy <= trashPosition.dy + trashSize.height;
+      bool inside = position.dx >= trashPosition.dx - 10 &&
+          position.dx <= trashPosition.dx + trashSize.width + 10 &&
+          position.dy >= trashPosition.dy + 10 &&
+          position.dy <= trashPosition.dy + trashSize.height + 10;
 
       return inside;
     }
@@ -173,6 +193,7 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
                         onDragStarted: () {
                           setState(() {
                             _isDragging = true;
+                            draggedPayment = payments[index];
                           });
                         },
                         onDraggableCanceled: (velocity, offset) {
@@ -185,7 +206,11 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
                               _checkIfInsideTrash(details.globalPosition);
                           _isOverTrashNotifier.value = isInside;
                         },
-                        onDragCompleted: () {
+                        onDragEnd: (details) {
+                          if (_isOverTrashNotifier.value) {
+                            deleteData(draggedPayment['id'].toString())
+                                .then((_) => fetchData());
+                          }
                           setState(() {
                             _isDragging = false;
                           });
@@ -202,8 +227,8 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
                             return Material(
                               color: Colors.transparent,
                               child: SizedBox(
-                                width: 100,
-                                height: 100,
+                                width: _isOverTrashNotifier.value ? 100 : 90,
+                                height: _isOverTrashNotifier.value ? 100 : 90,
                                 child: CardPaymentWidget(
                                   paymentName: payments[index]['name_payment'],
                                   iconCode: iconCode,
@@ -214,9 +239,8 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
                         ),
                         child: GestureDetector(
                           onTap: () => _showPaymentModal(
-                            payments[index]
-                                ['name_payment'], // Use o índice do mapa
-                            50.00,
+                            payments[index]['name_payment'],
+                            payments[index]['value'].toDouble(),
                           ),
                           child: CardPaymentWidget(
                             paymentName: payments[index]['name_payment'],
@@ -240,8 +264,8 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
                         },
                         child: Container(
                           key: _trashKey,
-                          width: 70,
-                          height: 70,
+                          width: 100,
+                          height: 100,
                           decoration: BoxDecoration(
                             color: Colors.red,
                             shape: BoxShape.circle,
@@ -256,7 +280,7 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
                           child: const Icon(
                             Icons.delete,
                             color: Colors.white,
-                            size: 50,
+                            size: 100,
                           ),
                         ),
                       ),
