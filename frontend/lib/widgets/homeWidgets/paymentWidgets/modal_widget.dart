@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ModalWidget extends StatefulWidget {
-  final String paymentName;
-  final double paymentValue;
+  Map<String, dynamic> editedPayment = {};
 
-  const ModalWidget({
+  ModalWidget({
     super.key,
-    required this.paymentName,
-    required this.paymentValue,
+    required this.editedPayment,
   });
 
   @override
@@ -21,9 +19,18 @@ class ModalWidgetState extends State<ModalWidget> {
   @override
   void initState() {
     super.initState();
-    titleController = TextEditingController(text: widget.paymentName);
-    valueController =
-        TextEditingController(text: widget.paymentValue.toString());
+    titleController =
+        TextEditingController(text: widget.editedPayment['name_payment']);
+    valueController = TextEditingController(
+        text: widget.editedPayment['value'].toStringAsFixed(2));
+
+    titleController.addListener(() => setState(() {
+          widget.editedPayment['name_payment'] = titleController.text;
+        }));
+
+    valueController.addListener(() => setState(() {
+          widget.editedPayment['value'] = double.parse(valueController.text);
+        }));
   }
 
   @override

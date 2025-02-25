@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ModalNewPayment extends StatefulWidget {
-  final Map<String, dynamic> payment;
-
-  ModalNewPayment({super.key, required this.payment});
+  ModalNewPayment({super.key});
 
   @override
   ModalNewPaymentState createState() => ModalNewPaymentState();
@@ -12,36 +10,15 @@ class ModalNewPayment extends StatefulWidget {
 class ModalNewPaymentState extends State<ModalNewPayment> {
   late TextEditingController titleController;
   late TextEditingController valueController;
-  IconData? selectedIcon;
+  IconData selectedIcon = Icons.add_circle_outline;
   int value = 0;
 
   @override
   void initState() {
     super.initState();
-    titleController =
-        TextEditingController(text: widget.payment['name_payment'] ?? '');
-    valueController = TextEditingController(
-        text: widget.payment['value'] != null
-            ? widget.payment['value'].toString()
-            : '0');
-
-    widget.payment['name_payment'] = '';
-    widget.payment['value'] = '0.00';
-
+    titleController = TextEditingController(text: '');
+    valueController = TextEditingController(text: '0.00');
     selectedIcon = Icons.add_circle_outline;
-    widget.payment['iconCode'] = selectedIcon?.codePoint.toString();
-
-    titleController.addListener(() {
-      widget.payment['name_payment'] = titleController.text;
-    });
-
-    valueController.addListener(() {
-      double parsedValue = double.tryParse(valueController.text) ?? 0.00;
-      parsedValue = double.parse(parsedValue.toStringAsFixed(2));
-      setState(() {
-        widget.payment['value'] = parsedValue.toString();
-      });
-    });
   }
 
   void openIconSelectionModal() {
@@ -69,11 +46,6 @@ class ModalNewPaymentState extends State<ModalNewPayment> {
                   setState(() {
                     selectedIcon = icon;
                     value = icon.codePoint;
-                    print(value);
-                  });
-                  print('Selecionado: ${icon.codePoint}');
-                  setState(() {
-                    widget.payment['iconCode'] = value.toString();
                   });
                   Navigator.of(context).pop();
                 },
@@ -170,8 +142,11 @@ class ModalNewPaymentState extends State<ModalNewPayment> {
       actions: [
         TextButton(
           onPressed: () {
-            print(widget.payment['value']);
-            Navigator.of(context).pop();
+            Map<String, dynamic> newPayment = {};
+            newPayment['name_payment'] = titleController.text;
+            newPayment['value'] = double.parse(valueController.text);
+            newPayment['iconCode'] = selectedIcon.codePoint.toString();
+            Navigator.of(context).pop((newPayment));
           },
           child: const Text('OK'),
         ),

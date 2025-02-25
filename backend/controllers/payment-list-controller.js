@@ -47,8 +47,13 @@ const PaymentListController = () => {
     try {
       const paymentToUpdated = req.body;
       const paymentId = Number(req.params.id);
+      console.log(paymentToUpdated);
 
-      if (!paymentToUpdated.name_payment || !paymentToUpdated.value) {
+      if (
+        !paymentToUpdated.name_payment ||
+        !paymentToUpdated.value ||
+        !paymentId
+      ) {
         return res.status(400).json({ error: error.message });
       }
 
