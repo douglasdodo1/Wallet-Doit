@@ -49,8 +49,6 @@ export const PaymentListService = () => {
 
   const deletePayment = async (data) => {
     data = parseInt(data);
-    console.log("to no service");
-    console.log(data);
 
     const paymentChecked = await paymentListRepository.read(data);
     console.log(paymentChecked);

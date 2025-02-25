@@ -14,14 +14,13 @@ class PaymentListWidget extends StatefulWidget {
 
 class PaymentListWidgetState extends State<PaymentListWidget> {
   List payments = [];
-  var payment = {'name_payment': '', 'value': '', 'iconCode': ''};
 
   Future<void> fetchData() async {
     final response = await http.get(
       Uri.parse('http://192.168.18.212:3000/payments/all'),
       headers: {
         'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDE2NTIzMywiZXhwIjoxNzQwMTY4ODMzfQ.5hPhY5JxtZO5wQkaTalOtgrpQvE2zocDfD5JnojpEpA',
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDQ1NTI0NCwiZXhwIjoxNzQwNDU4ODQ0fQ.xwiqaOuZ5uAFdFNe3_QS_RZZRDnbvkLn7BRG_ktigYk',
         'Content-Type': 'application/json',
       },
     );
@@ -35,41 +34,35 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
   }
 
   Future<void> sendData(payment) async {
-    final response =
-        await http.post(Uri.parse('http://192.168.18.212:3000/payments'),
-            headers: {
-              'Authorization':
-                  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDE2NTIzMywiZXhwIjoxNzQwMTY4ODMzfQ.5hPhY5JxtZO5wQkaTalOtgrpQvE2zocDfD5JnojpEpA',
-              'Content-Type': 'application/json'
-            },
-            body: jsonEncode(payment));
+    await http.post(Uri.parse('http://192.168.18.212:3000/payments'),
+        headers: {
+          'Authorization':
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDQ1NTI0NCwiZXhwIjoxNzQwNDU4ODQ0fQ.xwiqaOuZ5uAFdFNe3_QS_RZZRDnbvkLn7BRG_ktigYk',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode(payment));
+  }
 
-    if (response.statusCode == 200) {
-      var f = jsonDecode(response.body);
-      print("The payment: $f");
-    } else {
-      print(
-          "Erro ao enviar pagamento: ${response.statusCode} - ${response.body}");
-    }
+  Future<void> updateData(payment) async {
+    String paymentId = payment['id'].toString();
+    await http.put(Uri.parse('http://192.168.18.212:3000/payment/$paymentId'),
+        headers: {
+          'Authorization':
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDQ1NTI0NCwiZXhwIjoxNzQwNDU4ODQ0fQ.xwiqaOuZ5uAFdFNe3_QS_RZZRDnbvkLn7BRG_ktigYk',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode(payment));
   }
 
   Future<void> deleteData(String paymentId) async {
-    final response = await http.delete(
+    await http.delete(
       Uri.parse('http://192.168.18.212:3000/payments/$paymentId'),
       headers: {
         'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDE2NTIzMywiZXhwIjoxNzQwMTY4ODMzfQ.5hPhY5JxtZO5wQkaTalOtgrpQvE2zocDfD5JnojpEpA',
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDQ1NTI0NCwiZXhwIjoxNzQwNDU4ODQ0fQ.xwiqaOuZ5uAFdFNe3_QS_RZZRDnbvkLn7BRG_ktigYk',
         'Content-Type': 'application/json'
       },
     );
-
-    if (response.statusCode == 200) {
-      var f = jsonDecode(response.body);
-      print("Pagamento deletado: $f");
-    } else {
-      print(
-          "Erro ao deletar pagamento: ${response.statusCode} - ${response.body}");
-    }
   }
 
   bool _isDragging = false;
@@ -77,24 +70,25 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
   final ValueNotifier<bool> _isOverTrashNotifier = ValueNotifier<bool>(false);
   Map<String, dynamic> draggedPayment = {};
 
-  void _showPaymentModal(String name, double value) {
+  void _showPaymentModal(payment) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return ModalWidget(paymentName: name, paymentValue: value);
+        return ModalWidget(editedPayment: payment);
       },
-    );
+    ).then((_) => updateData(payment));
   }
 
-  void _showNewPaymentModal(payment) {
+  void _showNewPaymentModal() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return ModalNewPayment(
-          payment: payment,
-        );
+        return ModalNewPayment();
       },
-    ).then((_) => sendData(payment)).then((_) => fetchData());
+    ).then((result) {
+      Map<String, dynamic> newPayment = result;
+      sendData(newPayment);
+    });
   }
 
   int _getIconCode(code) {
@@ -140,7 +134,7 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
             child: Row(
               children: [
                 ElevatedButton(
-                  onPressed: () => _showNewPaymentModal(payment),
+                  onPressed: () => _showNewPaymentModal(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 250, 250, 250),
                     elevation: 0,
@@ -238,10 +232,7 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
                           },
                         ),
                         child: GestureDetector(
-                          onTap: () => _showPaymentModal(
-                            payments[index]['name_payment'],
-                            payments[index]['value'].toDouble(),
-                          ),
+                          onTap: () => _showPaymentModal(payments[index]),
                           child: CardPaymentWidget(
                             paymentName: payments[index]['name_payment'],
                             iconCode: iconCode,
