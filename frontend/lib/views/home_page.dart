@@ -1,11 +1,40 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:frontend/widgets/homeWidgets/payment_list_widget.dart';
 import 'package:frontend/widgets/menuWidgets/creditWidgets/credit_widget.dart';
 import 'package:frontend/widgets/homeWidgets/debit_widget.dart';
 import 'package:frontend/widgets/homeWidgets/month_payment.dart';
+import 'package:http/http.dart' as http;
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
+
+  @override
+  MyHomePageState createState() => MyHomePageState();
+}
+
+class MyHomePageState extends State<MyHomePage> {
+  dynamic user;
+
+  Future<void> fetchData() async {
+    final response = await http.get(
+      Uri.parse('http://192.168.18.212:3000/user'),
+      headers: {
+        'Authorization':
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDYyNzgyNiwiZXhwIjoxNzQwNjMxNDI2fQ.mHe-4WL-cZDUCIWr-AhonqIlsAgSQj_3SXNkbP_Kp5A',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    user = response;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
 
   @override
   Widget build(BuildContext context) {

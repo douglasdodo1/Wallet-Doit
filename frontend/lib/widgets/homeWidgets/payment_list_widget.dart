@@ -4,6 +4,8 @@ import 'package:frontend/widgets/homeWidgets/paymentWidgets/modal_new_payment.da
 import 'paymentWidgets/modal_widget.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 class PaymentListWidget extends StatefulWidget {
   const PaymentListWidget({super.key});
@@ -14,21 +16,28 @@ class PaymentListWidget extends StatefulWidget {
 
 class PaymentListWidgetState extends State<PaymentListWidget> {
   List payments = [];
+  bool _isDragging = false;
+  final GlobalKey _trashKey = GlobalKey();
+  final ValueNotifier<bool> _isOverTrashNotifier = ValueNotifier<bool>(false);
+  Map<String, dynamic> draggedPayment = {};
+  String formattedDate = '';
 
   Future<void> fetchData() async {
     final response = await http.get(
       Uri.parse('http://192.168.18.212:3000/payments/all'),
       headers: {
         'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDQ1NTI0NCwiZXhwIjoxNzQwNDU4ODQ0fQ.xwiqaOuZ5uAFdFNe3_QS_RZZRDnbvkLn7BRG_ktigYk',
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDYyNzgyNiwiZXhwIjoxNzQwNjMxNDI2fQ.mHe-4WL-cZDUCIWr-AhonqIlsAgSQj_3SXNkbP_Kp5A',
         'Content-Type': 'application/json',
       },
     );
 
     if (response.statusCode == 201) {
+      var data = json.decode(response.body);
+      payments = data;
+
       setState(() {
-        var data = json.decode(response.body);
-        payments = data;
+        payments = _getToDate(payments);
       });
     }
   }
@@ -37,10 +46,12 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
     await http.post(Uri.parse('http://192.168.18.212:3000/payments'),
         headers: {
           'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDQ1NTI0NCwiZXhwIjoxNzQwNDU4ODQ0fQ.xwiqaOuZ5uAFdFNe3_QS_RZZRDnbvkLn7BRG_ktigYk',
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDYyNzgyNiwiZXhwIjoxNzQwNjMxNDI2fQ.mHe-4WL-cZDUCIWr-AhonqIlsAgSQj_3SXNkbP_Kp5A',
           'Content-Type': 'application/json'
         },
         body: jsonEncode(payment));
+
+    fetchData();
   }
 
   Future<void> updateData(payment) async {
@@ -48,7 +59,7 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
     await http.put(Uri.parse('http://192.168.18.212:3000/payment/$paymentId'),
         headers: {
           'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDQ1NTI0NCwiZXhwIjoxNzQwNDU4ODQ0fQ.xwiqaOuZ5uAFdFNe3_QS_RZZRDnbvkLn7BRG_ktigYk',
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDYyNzgyNiwiZXhwIjoxNzQwNjMxNDI2fQ.mHe-4WL-cZDUCIWr-AhonqIlsAgSQj_3SXNkbP_Kp5A',
           'Content-Type': 'application/json'
         },
         body: jsonEncode(payment));
@@ -59,16 +70,24 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
       Uri.parse('http://192.168.18.212:3000/payments/$paymentId'),
       headers: {
         'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDQ1NTI0NCwiZXhwIjoxNzQwNDU4ODQ0fQ.xwiqaOuZ5uAFdFNe3_QS_RZZRDnbvkLn7BRG_ktigYk',
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDYyNzgyNiwiZXhwIjoxNzQwNjMxNDI2fQ.mHe-4WL-cZDUCIWr-AhonqIlsAgSQj_3SXNkbP_Kp5A',
         'Content-Type': 'application/json'
       },
     );
+
+    fetchData();
   }
 
-  bool _isDragging = false;
-  final GlobalKey _trashKey = GlobalKey();
-  final ValueNotifier<bool> _isOverTrashNotifier = ValueNotifier<bool>(false);
-  Map<String, dynamic> draggedPayment = {};
+  List _getToDate(paymentsList) {
+    List tempPayments = paymentsList.where((element) {
+      String paymentDate = element['createdAt'].substring(5, 7);
+      String actualMonth = formattedDate.substring(0, 2);
+      String actualPaymentMonth = paymentDate.substring(0, 2);
+
+      return actualMonth == actualPaymentMonth;
+    }).toList();
+    return tempPayments;
+  }
 
   void _showPaymentModal(payment) {
     showDialog(
@@ -117,9 +136,26 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
     return false;
   }
 
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showMonthPicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2025),
+          lastDate: DateTime(2100),
+        ) ??
+        DateTime.now();
+
+    setState(() {
+      formattedDate = DateFormat('MM/yyyy').format(picked);
+    });
+    fetchData();
+  }
+
   @override
   void initState() {
     super.initState();
+    DateTime date = DateTime.now();
+    formattedDate = DateFormat('MM/yyyy').format(date);
     fetchData();
   }
 
@@ -154,9 +190,19 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
                   ),
                 ),
                 Spacer(),
-                Text('02/25',
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ElevatedButton(
+                  onPressed: () => _selectDate(context),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 250, 250, 250),
+                      side: BorderSide.none,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                  child: Text(
+                    formattedDate,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
               ],
             ),
           ),
@@ -202,8 +248,7 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
                         },
                         onDragEnd: (details) {
                           if (_isOverTrashNotifier.value) {
-                            deleteData(draggedPayment['id'].toString())
-                                .then((_) => fetchData());
+                            deleteData(draggedPayment['id'].toString());
                           }
                           setState(() {
                             _isDragging = false;
