@@ -13,7 +13,10 @@ class CreditWidget extends StatefulWidget {
 
 class CreditWidgetState extends State<CreditWidget> {
   double _calculatePercentUsed(double usedValue, double totalValue) {
-    double percent = (usedValue) / totalValue;
+    double percent = 0;
+    if (usedValue > 0 || totalValue > 0) {
+      percent = (usedValue) / totalValue;
+    }
     return percent < 0.08 && percent > 0 ? 0.055 : percent;
   }
 

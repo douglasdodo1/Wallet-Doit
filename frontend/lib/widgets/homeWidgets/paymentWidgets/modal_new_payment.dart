@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/payment_model.dart';
 
 class ModalNewPayment extends StatefulWidget {
   ModalNewPayment({super.key});
+
+  static Future<PaymentModel> showNewPaymentModal(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ModalNewPayment();
+      },
+    );
+  }
 
   @override
   ModalNewPaymentState createState() => ModalNewPaymentState();
@@ -142,11 +152,12 @@ class ModalNewPaymentState extends State<ModalNewPayment> {
       actions: [
         TextButton(
           onPressed: () {
-            Map<String, dynamic> newPayment = {};
-            newPayment['name_payment'] = titleController.text;
-            newPayment['value'] = double.parse(valueController.text);
-            newPayment['iconCode'] = selectedIcon.codePoint.toString();
-            Navigator.of(context).pop((newPayment));
+            PaymentModel newPayment = PaymentModel(
+              namePayment: titleController.text,
+              value: double.parse(valueController.text),
+              iconCode: selectedIcon.codePoint.toString(),
+            );
+            Navigator.of(context).pop(newPayment);
           },
           child: const Text('OK'),
         ),

@@ -18,8 +18,10 @@ const UserController = () => {
 
   const readUser = async (req, res) => {
     const userCpf = req.user.cpf;
+
     if (!userCpf || userCpf.length != 11)
       return res.status(400).json({ error: "CPF inválido" });
+
     const user = await UserService.read(userCpf);
     if (!user) {
       return res.status(404).json({ error: "Usuário não encontrado" });

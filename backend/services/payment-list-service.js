@@ -4,6 +4,8 @@ const paymentListRepository = PaymentListRepository();
 
 export const PaymentListService = () => {
   const createPayment = async (data, cpf) => {
+    console.log("SERVICE", data);
+
     const payment = await paymentListRepository.create(data, cpf);
 
     if (!payment) {

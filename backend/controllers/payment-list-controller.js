@@ -9,7 +9,7 @@ const PaymentListController = () => {
       const cpf = req.user.cpf;
       payment.value = parseFloat(payment.value);
 
-      if (!payment.name_payment || !payment.value) {
+      if (!payment.namePayment || !payment.value) {
         return res.status(400).json({ error: "Name or value is missing" });
       }
 

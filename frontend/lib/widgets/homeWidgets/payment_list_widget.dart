@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/widgets/homeWidgets/paymentWidgets/card_payment_widget.dart';
 import 'package:frontend/widgets/homeWidgets/paymentWidgets/modal_new_payment.dart';
-import 'paymentWidgets/modal_widget.dart';
+import 'paymentWidgets/modal_edit_widget.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -27,7 +27,7 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
       Uri.parse('http://192.168.18.212:3000/payments/all'),
       headers: {
         'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDYyNzgyNiwiZXhwIjoxNzQwNjMxNDI2fQ.mHe-4WL-cZDUCIWr-AhonqIlsAgSQj_3SXNkbP_Kp5A',
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDcxMTU2NywiZXhwIjoxNzQwNzE1MTY3fQ.IQTrJuh8kx9t2_rWwyt6quP9dEerBCh89395Mz0snvo',
         'Content-Type': 'application/json',
       },
     );
@@ -46,7 +46,7 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
     await http.post(Uri.parse('http://192.168.18.212:3000/payments'),
         headers: {
           'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDYyNzgyNiwiZXhwIjoxNzQwNjMxNDI2fQ.mHe-4WL-cZDUCIWr-AhonqIlsAgSQj_3SXNkbP_Kp5A',
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDcxMTU2NywiZXhwIjoxNzQwNzE1MTY3fQ.IQTrJuh8kx9t2_rWwyt6quP9dEerBCh89395Mz0snvo',
           'Content-Type': 'application/json'
         },
         body: jsonEncode(payment));
@@ -59,7 +59,7 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
     await http.put(Uri.parse('http://192.168.18.212:3000/payment/$paymentId'),
         headers: {
           'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDYyNzgyNiwiZXhwIjoxNzQwNjMxNDI2fQ.mHe-4WL-cZDUCIWr-AhonqIlsAgSQj_3SXNkbP_Kp5A',
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDcxMTU2NywiZXhwIjoxNzQwNzE1MTY3fQ.IQTrJuh8kx9t2_rWwyt6quP9dEerBCh89395Mz0snvo',
           'Content-Type': 'application/json'
         },
         body: jsonEncode(payment));
@@ -70,7 +70,7 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
       Uri.parse('http://192.168.18.212:3000/payments/$paymentId'),
       headers: {
         'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDYyNzgyNiwiZXhwIjoxNzQwNjMxNDI2fQ.mHe-4WL-cZDUCIWr-AhonqIlsAgSQj_3SXNkbP_Kp5A',
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MDcxMTU2NywiZXhwIjoxNzQwNzE1MTY3fQ.IQTrJuh8kx9t2_rWwyt6quP9dEerBCh89395Mz0snvo',
         'Content-Type': 'application/json'
       },
     );
@@ -93,7 +93,7 @@ class PaymentListWidgetState extends State<PaymentListWidget> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return ModalWidget(editedPayment: payment);
+        return ModalEditWidget(editedPayment: payment);
       },
     ).then((_) => updateData(payment));
   }

@@ -7,7 +7,7 @@ export const PaymentListRepository = () => {
     try {
       return await prisma.paymentList.create({
         data: {
-          name_payment: data.name_payment,
+          namePayment: data.namePayment,
           value: data.value,
           iconCode: data.iconCode,
           user: {

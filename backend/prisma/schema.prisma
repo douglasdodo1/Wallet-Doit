@@ -21,14 +21,14 @@ model User {
   phone     String
   sale     Float
   credit   Float
-  credit_used   Float
+  creditUsed   Float
   paymentList PaymentList[]
 }
 
 
 model PaymentList {
   id           Int          @id @default(autoincrement())
-  name_payment String @unique
+  namePayment String
   value        Float
   userCpf      String
   iconCode     String?
