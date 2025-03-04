@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/payment_model.dart';
 
-class ModalWidget extends StatefulWidget {
-  Map<String, dynamic> editedPayment = {};
+class ModalEditWidget extends StatefulWidget {
+  late PaymentModel editedPayment;
 
-  ModalWidget({
+  ModalEditWidget({
     super.key,
     required this.editedPayment,
   });
 
+  static void showModalEditWidget(BuildContext context, PaymentModel payment) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ModalEditWidget(editedPayment: payment);
+      },
+    );
+  }
+
   @override
-  ModalWidgetState createState() => ModalWidgetState();
+  ModalEditWidgetState createState() => ModalEditWidgetState();
 }
 
-class ModalWidgetState extends State<ModalWidget> {
+class ModalEditWidgetState extends State<ModalEditWidget> {
   late TextEditingController titleController;
   late TextEditingController valueController;
 
@@ -20,16 +30,16 @@ class ModalWidgetState extends State<ModalWidget> {
   void initState() {
     super.initState();
     titleController =
-        TextEditingController(text: widget.editedPayment['name_payment']);
+        TextEditingController(text: widget.editedPayment.namePayment);
     valueController = TextEditingController(
-        text: widget.editedPayment['value'].toStringAsFixed(2));
+        text: widget.editedPayment.value.toStringAsFixed(2));
 
     titleController.addListener(() => setState(() {
-          widget.editedPayment['name_payment'] = titleController.text;
+          widget.editedPayment.namePayment = titleController.text;
         }));
 
     valueController.addListener(() => setState(() {
-          widget.editedPayment['value'] = double.parse(valueController.text);
+          widget.editedPayment.value = double.parse(valueController.text);
         }));
   }
 
