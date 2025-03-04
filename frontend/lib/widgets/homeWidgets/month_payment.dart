@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
+
 class MouthPayment extends StatefulWidget {
   const MouthPayment({super.key});
 
@@ -9,17 +10,9 @@ class MouthPayment extends StatefulWidget {
 }
 
 class MouthPaymentState extends State<MouthPayment> {
-  final List<String> months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-  ];
+  List months = ['jan', 'feb', 'marc', 'april', 'mai', 'jun'];
 
-  final List<double> payments = [
+  final List<double> paymentsValues = [
     100,
     200,
     150,
@@ -46,7 +39,7 @@ class MouthPaymentState extends State<MouthPayment> {
         padding: const EdgeInsets.fromLTRB(6, 20, 2, 0),
         child: BarChart(
           BarChartData(
-            barGroups: payments.asMap().entries.map((entry) {
+            barGroups: paymentsValues.asMap().entries.map((entry) {
               final index = entry.key;
               final value = entry.value;
 
@@ -69,7 +62,7 @@ class MouthPaymentState extends State<MouthPayment> {
               leftTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
-                  interval: calculateInterval(payments),
+                  interval: calculateInterval(paymentsValues),
                   reservedSize: 35,
                   getTitlesWidget: (value, meta) {
                     return Text(

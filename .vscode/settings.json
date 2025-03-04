@@ -1,0 +1,5 @@
+{
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "java.compile.nullAnalysis.mode": "automatic",
+  "cmake.sourceDirectory": "C:/Users/Douglas/Desktop/projects/Wallet-Doit/frontend/linux"
+}

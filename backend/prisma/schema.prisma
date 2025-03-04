@@ -17,21 +17,23 @@ model User {
   cpf       String   @id @default(uuid())
   name      String
   email     String   @unique
-  password  String  
+  password  String
   phone     String
   sale     Float
   credit   Float
-  credit_used   Float
+  creditUsed   Float
   paymentList PaymentList[]
 }
 
 
 model PaymentList {
   id           Int          @id @default(autoincrement())
-  name_payment String @unique
-  value       Float
-  userCpf String
+  namePayment String
+  value        Float
+  userCpf      String
+  iconCode     String?
   user User @relation(fields: [userCpf], references: [cpf])
+  createdAt    DateTime @default(now())
 }
 
 
