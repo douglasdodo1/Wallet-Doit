@@ -3,14 +3,14 @@ import 'package:frontend/widgets/menuWidgets/login_widget.dart';
 import 'package:frontend/widgets/menuWidgets/register_widget.dart';
 import '../widgets/menuWidgets/menu_button_login_register.dart';
 
-class MenuPage extends StatefulWidget {
-  const MenuPage({super.key});
+class MenuPageView extends StatefulWidget {
+  const MenuPageView({super.key});
 
   @override
-  MenuPageState createState() => MenuPageState();
+  MenuPageViewState createState() => MenuPageViewState();
 }
 
-class MenuPageState extends State<MenuPage> {
+class MenuPageViewState extends State<MenuPageView> {
   bool _stateButton = false;
   bool _isFocused = false;
 
@@ -19,7 +19,6 @@ class MenuPageState extends State<MenuPage> {
       _stateButton = buttonIsPressed;
     });
     _isFocused = false;
-    print(_stateButton);
   }
 
   void _receiveStateInput(bool isFocusedInput) {

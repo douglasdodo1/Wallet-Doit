@@ -27,7 +27,7 @@ class DebitWidgetState extends State<DebitWidget> {
                 heightFactor: 0.6,
                 child: SizedBox(
                   child: FractionallySizedBox(
-                    widthFactor: 0.8,
+                    widthFactor: 1,
                     heightFactor: 1,
                     child: Container(
                       decoration: BoxDecoration(
@@ -59,12 +59,11 @@ class DebitWidgetState extends State<DebitWidget> {
               child: Stack(
                 children: [
                   Positioned(
-                    right: 2,
-                    top: 8,
+                    top: 10,
                     child: Icon(
                       Icons.settings,
                       color: Colors.black,
-                      size: 50,
+                      size: 40,
                     ),
                   ),
                 ],

@@ -1,69 +1,78 @@
-import PaymentListRepository from '../repositories/payment-list-repository.js';
+import PaymentListRepository from "../repositories/payment-list-repository.js";
 
 const paymentListRepository = PaymentListRepository();
 
-export const PaymentListService = () =>{
-    const createPayment = async (data,cpf) => {
-        const payment = await paymentListRepository.create(data,cpf);
+export const PaymentListService = () => {
+  const createPayment = async (data, cpf) => {
+    console.log("SERVICE", data);
 
-        if (!payment){
-            throw new Error('Failed to create Payment List');
-        }
-        return payment;
+    const payment = await paymentListRepository.create(data, cpf);
+
+    if (!payment) {
+      throw new Error("Failed to create Payment List");
+    }
+    return payment;
+  };
+
+  const readPayment = async (data) => {
+    const payment = await paymentListRepository.read(data);
+
+    if (!payment) {
+      throw new Error("Payment not found");
     }
 
-    const readPayment = async (data) => {
-        const payment = await paymentListRepository.read(data);
+    return payment;
+  };
 
-        if (!payment){
-            throw new Error('Payment not found');
-        }
+  const readPayments = async (data) => {
+    const payment = await paymentListRepository.readAll(data);
 
-        return payment;
+    if (!payment) {
+      throw new Error("no payments found");
     }
 
-    const readPayments = async (data) => {
-        const payment = await paymentListRepository.readAll(data);
+    return payment;
+  };
 
-        if (!payment){
-            throw new Error('no payments found');
-        }
+  const updatePayment = async (data, id) => {
+    const paymentChecked = await paymentListRepository.read(id);
 
-        return payment;
+    if (paymentChecked === null) {
+      throw new Error("payment not found");
     }
 
-    const updatePayment = async (data, id) => {
-        const paymentChecked = await paymentListRepository.read(id);
-
-        if ( paymentChecked === null){
-            throw new Error('payment not found');
-        }
-
-        const updatedPayment = await paymentListRepository.update(data, id);
-        if (updatedPayment == null){
-            throw new Error('payment not updated');
-        }
-
-        return updatedPayment;
+    const updatedPayment = await paymentListRepository.update(data, id);
+    if (updatedPayment == null) {
+      throw new Error("payment not updated");
     }
 
-    const deletePayment = async (data) => {
-        const paymentChecked = await paymentListRepository.read();
+    return updatedPayment;
+  };
 
-        if ( paymentChecked === null){
-            throw new Error('payment not found');
-        }
-        const deletedPayment = await paymentListRepository.delete(data);
+  const deletePayment = async (data) => {
+    data = parseInt(data);
 
-        if (deletedPayment == null){
-            throw new Error('payment not deleted');
-        }
+    const paymentChecked = await paymentListRepository.read(data);
+    console.log(paymentChecked);
 
-        return deletedPayment;
+    if (paymentChecked === null) {
+      throw new Error("payment not found");
     }
-    return {
-        createPayment, readPayment, readPayments, updatePayment, deletePayment,
+    const deletedPayment = await paymentListRepository.deletePayment(data);
+
+    if (deletedPayment == null) {
+      throw new Error("payment not deleted");
     }
-}
+
+    return deletedPayment;
+  };
+  return {
+    createPayment,
+    readPayment,
+    readPayments,
+    updatePayment,
+    deletePayment,
+  };
+};
 
 export default PaymentListService;
