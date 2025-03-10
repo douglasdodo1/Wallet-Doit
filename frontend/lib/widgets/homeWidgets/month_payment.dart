@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-
+import 'package:intl/intl.dart';
 
 class MouthPayment extends StatefulWidget {
-  const MouthPayment({super.key});
+  final Map<int, double> paymentValues;
+  const MouthPayment({
+    super.key,
+    required this.paymentValues,
+  });
 
   @override
   MouthPaymentState createState() => MouthPaymentState();
 }
 
 class MouthPaymentState extends State<MouthPayment> {
-  List months = ['jan', 'feb', 'marc', 'april', 'mai', 'jun'];
+  List months = ['jan', 'feb', 'marc', 'april', 'mai', 'jun', 'jul'];
 
   final List<double> paymentsValues = [
     100,
@@ -27,6 +31,23 @@ class MouthPaymentState extends State<MouthPayment> {
     return bigger / 5;
   }
 
+  String getMonthAbbreviation(int month) {
+    if (month < 1 || month > 12) {
+      return 'Mês inválido';
+    }
+
+    // Obter a sigla do mês (primeiras 3 letras)
+    DateFormat dateFormat = DateFormat('MMM');
+    String monthAbbreviation = dateFormat.format(DateTime(2025, month));
+
+    return monthAbbreviation;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,7 +60,7 @@ class MouthPaymentState extends State<MouthPayment> {
         padding: const EdgeInsets.fromLTRB(6, 20, 2, 0),
         child: BarChart(
           BarChartData(
-            barGroups: paymentsValues.asMap().entries.map((entry) {
+            barGroups: widget.paymentValues.entries.map((entry) {
               final index = entry.key;
               final value = entry.value;
 
@@ -78,9 +99,10 @@ class MouthPaymentState extends State<MouthPayment> {
                   reservedSize: 40,
                   getTitlesWidget: (value, meta) {
                     final index = value.toInt();
-                    if (index >= 0 && index < months.length) {
+                    if (index >= 0 && index <= widget.paymentValues.length) {
                       return Text(
-                        months[index],
+                        //months[index],
+                        getMonthAbbreviation(index),
                         style: const TextStyle(fontSize: 15),
                       );
                     }
