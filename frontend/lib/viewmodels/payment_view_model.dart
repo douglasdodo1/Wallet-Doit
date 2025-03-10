@@ -14,11 +14,11 @@ class PaymentViewModel extends ChangeNotifier {
   final ValueNotifier<bool> isOverTrashNotifier = ValueNotifier<bool>(false);
   late PaymentModel draggedPayment;
   String token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MTI5NDk5OSwiZXhwIjoxNzQxMjk4NTk5fQ.3GkuOOgt7n3rZ-5GfGnimWeou5sCiynOpCTwHrnRcPQ';
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MTYzMTAwOCwiZXhwIjoxNzQxNjM0NjA4fQ.Nt8YhVEtd0YATPIqOrK1JDQXHxvDuIM7xsonArYehf8';
 
   Future<void> fetchData() async {
     final response = await http.get(
-      Uri.parse('http://192.168.18.212:3000/payments/all'),
+      Uri.parse('http://150.161.197.115:3000/payments/all'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ class PaymentViewModel extends ChangeNotifier {
   }
 
   Future<void> sendData(PaymentModel payment) async {
-    await http.post(Uri.parse('http://192.168.18.212:3000/payments'),
+    await http.post(Uri.parse('http://150.161.197.115:3000/payments'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json'
@@ -47,7 +47,7 @@ class PaymentViewModel extends ChangeNotifier {
 
   Future<void> updateData(payment) async {
     String paymentId = payment['id'].toString();
-    await http.put(Uri.parse('http://192.168.18.212:3000/payment/$paymentId'),
+    await http.put(Uri.parse('http://150.161.197.115:3000/payment/$paymentId'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ class PaymentViewModel extends ChangeNotifier {
 
   Future<void> deleteData(String paymentId) async {
     await http.delete(
-      Uri.parse('http://192.168.18.212:3000/payments/$paymentId'),
+      Uri.parse('http://150.161.197.115:3000/payments/$paymentId'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json'

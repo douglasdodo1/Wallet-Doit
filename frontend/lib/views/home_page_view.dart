@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/viewmodels/user_view_model.dart';
+import 'package:frontend/views/bottom_bar_view.dart';
 import 'package:frontend/views/payment_list_view.dart';
 import 'package:frontend/widgets/menuWidgets/creditWidgets/credit_widget.dart';
 import 'package:frontend/widgets/homeWidgets/debit_widget.dart';
@@ -68,7 +69,7 @@ class MyHomePageViewState extends State<MyHomePageView> {
             ],
           ),
         ),
-        bottomNavigationBar: Container(height: 80, color: Colors.yellow),
+        bottomNavigationBar: BottomBarView(),
       );
     });
   }
