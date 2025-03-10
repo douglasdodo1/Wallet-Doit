@@ -17,11 +17,11 @@ class UserViewModel extends ChangeNotifier {
   List<PaymentModel> payments = [];
 
   String token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MTI5NDk5OSwiZXhwIjoxNzQxMjk4NTk5fQ.3GkuOOgt7n3rZ-5GfGnimWeou5sCiynOpCTwHrnRcPQ';
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MTYzMjExNSwiZXhwIjoxNzQxNjM1NzE1fQ.Gn6RHpqzmYCXDnWN76_PBrpLnPZ_3d2UhrO0EO0vSFk';
 
   Future<void> fetchUser() async {
     final response = await http.get(
-      Uri.parse('http://192.168.18.212:3000/user'),
+      Uri.parse('http://150.161.197.115:3000/user'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ class UserViewModel extends ChangeNotifier {
 
   Future<void> fetchData() async {
     final response = await http.get(
-      Uri.parse('http://192.168.18.212:3000/payments/all'),
+      Uri.parse('http://150.161.197.115:3000/payments/all'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
