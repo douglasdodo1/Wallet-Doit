@@ -17,7 +17,12 @@ class MyHomePageViewState extends State<MyHomePageView> {
   @override
   void initState() {
     super.initState();
-    Provider.of<UserViewModel>(context, listen: false).fetchUser();
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+
+    userViewModel.fetchUser();
+    userViewModel.fetchData().then((_) {
+      userViewModel.filterPaymentsByDate();
+    });
   }
 
   @override
@@ -47,7 +52,8 @@ class MyHomePageViewState extends State<MyHomePageView> {
                 flex: 3,
                 child: Container(
                     color: Color.fromARGB(255, 250, 250, 250),
-                    child: MouthPayment()),
+                    child: MouthPayment(
+                        paymentValues: userViewModel.filterPaymentsByDate())),
               ),
               Container(
                 height: 2,

@@ -13,13 +13,14 @@ class PaymentViewModel extends ChangeNotifier {
   final GlobalKey trashKey = GlobalKey();
   final ValueNotifier<bool> isOverTrashNotifier = ValueNotifier<bool>(false);
   late PaymentModel draggedPayment;
+  String token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MTI5NDk5OSwiZXhwIjoxNzQxMjk4NTk5fQ.3GkuOOgt7n3rZ-5GfGnimWeou5sCiynOpCTwHrnRcPQ';
 
   Future<void> fetchData() async {
     final response = await http.get(
       Uri.parse('http://192.168.18.212:3000/payments/all'),
       headers: {
-        'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MTExNzU5MiwiZXhwIjoxNzQxMTIxMTkyfQ.dv8lR_73BMSpvAsbShI-NjIX_jjstkVt2m5vPp8vD6A',
+        'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       },
     );
@@ -36,8 +37,7 @@ class PaymentViewModel extends ChangeNotifier {
   Future<void> sendData(PaymentModel payment) async {
     await http.post(Uri.parse('http://192.168.18.212:3000/payments'),
         headers: {
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MTExNzU5MiwiZXhwIjoxNzQxMTIxMTkyfQ.dv8lR_73BMSpvAsbShI-NjIX_jjstkVt2m5vPp8vD6A',
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json'
         },
         body: jsonEncode(payment.removeNulls()));
@@ -49,8 +49,7 @@ class PaymentViewModel extends ChangeNotifier {
     String paymentId = payment['id'].toString();
     await http.put(Uri.parse('http://192.168.18.212:3000/payment/$paymentId'),
         headers: {
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MTExNzU5MiwiZXhwIjoxNzQxMTIxMTkyfQ.dv8lR_73BMSpvAsbShI-NjIX_jjstkVt2m5vPp8vD6A',
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json'
         },
         body: jsonEncode(payment));
@@ -60,8 +59,7 @@ class PaymentViewModel extends ChangeNotifier {
     await http.delete(
       Uri.parse('http://192.168.18.212:3000/payments/$paymentId'),
       headers: {
-        'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MTExNzU5MiwiZXhwIjoxNzQxMTIxMTkyfQ.dv8lR_73BMSpvAsbShI-NjIX_jjstkVt2m5vPp8vD6A',
+        'Authorization': 'Bearer $token',
         'Content-Type': 'application/json'
       },
     );
