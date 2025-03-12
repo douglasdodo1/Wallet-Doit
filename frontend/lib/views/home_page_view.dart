@@ -69,7 +69,7 @@ class MyHomePageViewState extends State<MyHomePageView> {
             ],
           ),
         ),
-        bottomNavigationBar: BottomBarView(),
+        bottomNavigationBar: BottomBarView(payments: userViewModel.payments),
       );
     });
   }

@@ -13,6 +13,7 @@ export const PaymentListRepository = () => {
           user: {
             connect: { cpf: cpf },
           },
+          createdAt: data.createdAt,
         },
       });
     } catch (error) {

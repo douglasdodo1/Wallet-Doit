@@ -1,26 +1,26 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:frontend/globals.dart';
 import 'package:frontend/models/payment_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class PaymentViewModel extends ChangeNotifier {
   List<PaymentModel> payments = [];
   String formattedDate = DateFormat('MM/yyyy').format(DateTime.now());
-  final String baseUrl = 'http://192.168.18.212:3000';
+  final String baseUrl = 'http://${Globals.localhost}:3000';
   bool isDragging = false;
   final GlobalKey trashKey = GlobalKey();
   final ValueNotifier<bool> isOverTrashNotifier = ValueNotifier<bool>(false);
   late PaymentModel draggedPayment;
-  String token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkxMSIsImlhdCI6MTc0MTYzMTAwOCwiZXhwIjoxNzQxNjM0NjA4fQ.Nt8YhVEtd0YATPIqOrK1JDQXHxvDuIM7xsonArYehf8';
 
   Future<void> fetchData() async {
     final response = await http.get(
-      Uri.parse('http://150.161.197.115:3000/payments/all'),
+      Uri.parse('http://${Globals.localhost}:3000/payments/all'),
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer ${Globals.token}',
         'Content-Type': 'application/json',
       },
     );
@@ -35,9 +35,9 @@ class PaymentViewModel extends ChangeNotifier {
   }
 
   Future<void> sendData(PaymentModel payment) async {
-    await http.post(Uri.parse('http://150.161.197.115:3000/payments'),
+    await http.post(Uri.parse('http://${Globals.localhost}:3000/payments'),
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer ${Globals.token}',
           'Content-Type': 'application/json'
         },
         body: jsonEncode(payment.removeNulls()));
@@ -47,9 +47,10 @@ class PaymentViewModel extends ChangeNotifier {
 
   Future<void> updateData(payment) async {
     String paymentId = payment['id'].toString();
-    await http.put(Uri.parse('http://150.161.197.115:3000/payment/$paymentId'),
+    await http.put(
+        Uri.parse('http://${Globals.localhost}:3000/payment/$paymentId'),
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer ${Globals.token}',
           'Content-Type': 'application/json'
         },
         body: jsonEncode(payment));
@@ -57,9 +58,9 @@ class PaymentViewModel extends ChangeNotifier {
 
   Future<void> deleteData(String paymentId) async {
     await http.delete(
-      Uri.parse('http://150.161.197.115:3000/payments/$paymentId'),
+      Uri.parse('http://${Globals.localhost}:3000/payments/$paymentId'),
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer ${Globals.token}',
         'Content-Type': 'application/json'
       },
     );

@@ -14,21 +14,14 @@ class MouthPayment extends StatefulWidget {
 }
 
 class MouthPaymentState extends State<MouthPayment> {
-  List months = ['jan', 'feb', 'marc', 'april', 'mai', 'jun', 'jul'];
-
-  final List<double> paymentsValues = [
-    100,
-    200,
-    150,
-    180,
-    120,
-    90,
-    500,
-  ];
-
   double calculateInterval(List<double> numbers) {
     double bigger = numbers.reduce((a, b) => a > b ? a : b);
-    return bigger / 5;
+
+    double interval = bigger / 5;
+    if (interval == 0) {
+      interval = 1;
+    }
+    return interval;
   }
 
   String getMonthAbbreviation(int month) {
@@ -83,7 +76,8 @@ class MouthPaymentState extends State<MouthPayment> {
               leftTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
-                  interval: calculateInterval(paymentsValues),
+                  interval:
+                      calculateInterval(widget.paymentValues.values.toList()),
                   reservedSize: 35,
                   getTitlesWidget: (value, meta) {
                     return Text(
