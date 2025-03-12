@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/payment_model.dart';
 import 'package:frontend/views/home_page_view.dart';
+import 'package:frontend/views/notifications_view.dart';
 
 class BottomBarView extends StatefulWidget {
-  const BottomBarView({super.key});
+  late List<PaymentModel> payments;
+  BottomBarView({super.key, required this.payments});
   @override
   BottomBarViewState createState() => BottomBarViewState();
 }
@@ -41,7 +44,22 @@ class BottomBarViewState extends State<BottomBarView> {
                 ),
               ),
             ),
-            SizedBox(),
+            SizedBox(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              NotificationsView(payments: widget.payments)));
+                },
+                child: Icon(
+                  Icons.notifications,
+                  color: Colors.black,
+                  size: 60,
+                ),
+              ),
+            ),
           ]),
         ));
   }

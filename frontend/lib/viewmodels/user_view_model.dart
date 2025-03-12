@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/globals.dart';
 import 'package:frontend/models/payment_model.dart';
 import 'package:frontend/models/user_model.dart';
 import 'package:http/http.dart' as http;
@@ -21,9 +22,9 @@ class UserViewModel extends ChangeNotifier {
 
   Future<void> fetchUser() async {
     final response = await http.get(
-      Uri.parse('http://150.161.197.115:3000/user'),
+      Uri.parse('http://${Globals.localhost}:3000/user'),
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer ${Globals.token}',
         'Content-Type': 'application/json',
       },
     );
@@ -34,9 +35,9 @@ class UserViewModel extends ChangeNotifier {
 
   Future<void> fetchData() async {
     final response = await http.get(
-      Uri.parse('http://150.161.197.115:3000/payments/all'),
+      Uri.parse('http://${Globals.localhost}:3000/payments/all'),
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer ${Globals.token}',
         'Content-Type': 'application/json',
       },
     );
@@ -45,7 +46,6 @@ class UserViewModel extends ChangeNotifier {
       var data = json.decode(response.body);
       payments = List<PaymentModel>.from(
           data.map((element) => PaymentModel.fromJson(element)));
-      //ayments = _filterPaymentsByDate(payments);
       notifyListeners();
     }
   }
