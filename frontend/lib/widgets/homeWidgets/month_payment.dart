@@ -1,30 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-
+import 'package:intl/intl.dart';
 
 class MouthPayment extends StatefulWidget {
-  const MouthPayment({super.key});
+  final Map<int, double> paymentValues;
+  const MouthPayment({
+    super.key,
+    required this.paymentValues,
+  });
 
   @override
   MouthPaymentState createState() => MouthPaymentState();
 }
 
 class MouthPaymentState extends State<MouthPayment> {
-  List months = ['jan', 'feb', 'marc', 'april', 'mai', 'jun'];
-
-  final List<double> paymentsValues = [
-    100,
-    200,
-    150,
-    180,
-    120,
-    90,
-    500,
-  ];
-
   double calculateInterval(List<double> numbers) {
     double bigger = numbers.reduce((a, b) => a > b ? a : b);
-    return bigger / 5;
+
+    double interval = bigger / 5;
+    if (interval == 0) {
+      interval = 1;
+    }
+    return interval;
+  }
+
+  String getMonthAbbreviation(int month) {
+    if (month < 1 || month > 12) {
+      return 'Mês inválido';
+    }
+
+    // Obter a sigla do mês (primeiras 3 letras)
+    DateFormat dateFormat = DateFormat('MMM');
+    String monthAbbreviation = dateFormat.format(DateTime(2025, month));
+
+    return monthAbbreviation;
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -39,7 +53,7 @@ class MouthPaymentState extends State<MouthPayment> {
         padding: const EdgeInsets.fromLTRB(6, 20, 2, 0),
         child: BarChart(
           BarChartData(
-            barGroups: paymentsValues.asMap().entries.map((entry) {
+            barGroups: widget.paymentValues.entries.map((entry) {
               final index = entry.key;
               final value = entry.value;
 
@@ -62,7 +76,8 @@ class MouthPaymentState extends State<MouthPayment> {
               leftTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
-                  interval: calculateInterval(paymentsValues),
+                  interval:
+                      calculateInterval(widget.paymentValues.values.toList()),
                   reservedSize: 35,
                   getTitlesWidget: (value, meta) {
                     return Text(
@@ -78,9 +93,10 @@ class MouthPaymentState extends State<MouthPayment> {
                   reservedSize: 40,
                   getTitlesWidget: (value, meta) {
                     final index = value.toInt();
-                    if (index >= 0 && index < months.length) {
+                    if (index >= 0 && index <= widget.paymentValues.length) {
                       return Text(
-                        months[index],
+                        //months[index],
+                        getMonthAbbreviation(index),
                         style: const TextStyle(fontSize: 15),
                       );
                     }

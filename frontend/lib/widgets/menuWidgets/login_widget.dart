@@ -22,7 +22,7 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   void _updateFocusState() {
     final hasFocus = _usernameFocusNode.hasFocus || _passwordFocusNode.hasFocus;
-    widget.onInputPressed(hasFocus); // Notifica a MenuPage sobre o estado
+    widget.onInputPressed(hasFocus);
   }
 
   @override
