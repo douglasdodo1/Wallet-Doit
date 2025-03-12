@@ -33,7 +33,7 @@ model PaymentList {
   userCpf      String
   iconCode     String?
   user User @relation(fields: [userCpf], references: [cpf])
-  createdAt    DateTime @default(now())
+  createdAt    String
 }
 
 
