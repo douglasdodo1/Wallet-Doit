@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/viewmodels/user_view_model.dart';
-import 'package:frontend/views/home_page_view.dart';
+import 'package:frontend/views/menu_page_view.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/viewmodels/payment_view_model.dart';
 
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePageView(),
+      home: const MenuPageView(),
     );
   }
 }

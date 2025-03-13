@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/globals.dart';
 import 'package:frontend/widgets/menuWidgets/login_widget.dart';
 import 'package:frontend/widgets/menuWidgets/register_widget.dart';
 import '../widgets/menuWidgets/menu_button_login_register.dart';
@@ -9,6 +10,8 @@ class MenuPageView extends StatefulWidget {
   @override
   MenuPageViewState createState() => MenuPageViewState();
 }
+
+
 
 class MenuPageViewState extends State<MenuPageView> {
   bool _stateButton = false;

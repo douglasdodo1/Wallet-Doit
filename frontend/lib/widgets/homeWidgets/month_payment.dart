@@ -29,7 +29,6 @@ class MouthPaymentState extends State<MouthPayment> {
       return 'Mês inválido';
     }
 
-    // Obter a sigla do mês (primeiras 3 letras)
     DateFormat dateFormat = DateFormat('MMM');
     String monthAbbreviation = dateFormat.format(DateTime(2025, month));
 

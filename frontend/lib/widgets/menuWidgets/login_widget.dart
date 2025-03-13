@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:frontend/globals.dart';
+import 'package:frontend/views/home_page_view.dart';
+import 'package:http/http.dart' as http;
 
 class LoginWidget extends StatefulWidget {
   final void Function(bool) onInputPressed;
@@ -10,28 +15,77 @@ class LoginWidget extends StatefulWidget {
 }
 
 class _LoginWidgetState extends State<LoginWidget> {
-  final FocusNode _usernameFocusNode = FocusNode();
+  final TextEditingController _cpfController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  final FocusNode _cpfFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
+
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _usernameFocusNode.addListener(_updateFocusState);
+    _cpfFocusNode.addListener(_updateFocusState);
     _passwordFocusNode.addListener(_updateFocusState);
   }
 
   void _updateFocusState() {
-    final hasFocus = _usernameFocusNode.hasFocus || _passwordFocusNode.hasFocus;
+    final hasFocus = _cpfFocusNode.hasFocus || _passwordFocusNode.hasFocus;
     widget.onInputPressed(hasFocus);
   }
 
   @override
   void dispose() {
-    _usernameFocusNode.removeListener(_updateFocusState);
+    _cpfController.dispose();
+    _passwordController.dispose();
+    _cpfFocusNode.removeListener(_updateFocusState);
     _passwordFocusNode.removeListener(_updateFocusState);
-    _usernameFocusNode.dispose();
+    _cpfFocusNode.dispose();
     _passwordFocusNode.dispose();
     super.dispose();
+  }
+
+  Future<void> login() async {
+    setState(() => _isLoading = true);
+
+    final user = {
+      'cpf': _cpfController.text.trim(),
+      'password': _passwordController.text.trim(),
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://${Globals.localhost}:3000/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(user),
+      );
+
+      setState(() => _isLoading = false);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print(data);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login realizado com sucesso!')),
+        );
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MyHomePageView()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro: ${response.body}')),
+        );
+      }
+    } catch (e) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro na requisição: $e')),
+      );
+    }
   }
 
   @override
@@ -47,20 +101,15 @@ class _LoginWidgetState extends State<LoginWidget> {
                 SizedBox(
                   width: 300,
                   child: TextField(
-                    focusNode: _usernameFocusNode,
+                    controller: _cpfController,
+                    focusNode: _cpfFocusNode,
                     decoration: const InputDecoration(
-                      labelText: 'Username',
+                      labelText: 'CPF',
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white, // Cor da borda
-                          width: 4, // Largura da borda
-                        ),
+                        borderSide: BorderSide(color: Colors.white, width: 2),
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white, // Cor da borda quando em foco
-                          width: 5, // Largura da borda em foco
-                        ),
+                        borderSide: BorderSide(color: Colors.blue, width: 3),
                       ),
                     ),
                   ),
@@ -69,68 +118,37 @@ class _LoginWidgetState extends State<LoginWidget> {
                 SizedBox(
                   width: 300,
                   child: TextField(
+                    controller: _passwordController,
                     focusNode: _passwordFocusNode,
                     obscureText: true,
                     decoration: const InputDecoration(
-                      labelText: 'Password',
+                      labelText: 'Senha',
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white, // Cor da borda
-                          width: 5, // Largura da borda
-                        ),
+                        borderSide: BorderSide(color: Colors.white, width: 2),
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white, // Cor da borda quando em foco
-                          width: 6, // Largura da borda em foco
-                        ),
+                        borderSide: BorderSide(color: Colors.blue, width: 3),
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 16),
-                Text(
-                  'Esqueceu a senha?',
-                  style: const TextStyle(color: Colors.white),
-                ),
-                const SizedBox(height: 16),
-                Stack(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4.0),
-                      child: Container(
-                        width: 150,
-                        height: 55,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.zero,
-                          color: const Color.fromARGB(255, 0, 0, 0),
+                _isLoading
+                    ? const CircularProgressIndicator()
+                    : ElevatedButton(
+                        onPressed: login,
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(150, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          ),
+                          side: const BorderSide(
+                            color: Color.fromARGB(255, 221, 221, 221),
+                            width: 2,
+                          ),
                         ),
+                        child: const Text('Log in'),
                       ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Ação ao clicar no botão Login
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Login realizado')),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(150, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.zero, // Define bordas quadradas
-                        ),
-                        side: const BorderSide(
-                          color: Color.fromARGB(
-                              255, 221, 221, 221), // Cor da borda
-                          width: 2, // Largura da borda
-                        ),
-                      ),
-                      child: const Text(
-                          'Log in'), // Corrigido o posicionamento de `child`
-                    ),
-                  ],
-                )
               ],
             ),
           ),

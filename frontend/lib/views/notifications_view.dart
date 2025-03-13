@@ -25,7 +25,7 @@ class _NotificationsViewState extends State<NotificationsView> {
     List<PaymentModel> tempPayments = widget.payments.where((element) {
       int paymentDay = int.parse(element.createdAt!.substring(8, 10));
       print('$currentDay,${element.createdAt!.substring(8, 10)}');
-      return paymentDay == currentDay + 7;
+      return paymentDay - currentDay <= 7 && paymentDay - currentDay > 0;
     }).toList();
 
     setState(() {

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/globals.dart';
+import 'package:frontend/views/menu_page_view.dart';
 
 class DebitWidget extends StatefulWidget {
   final double debit;
@@ -6,6 +8,22 @@ class DebitWidget extends StatefulWidget {
 
   @override
   DebitWidgetState createState() => DebitWidgetState();
+}
+
+void logout(BuildContext context) {
+  // 🔴 Apaga o token de autenticação
+  Globals.token = '';
+
+  // 🔴 Retorna para a tela de login e remove todas as rotas anteriores
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (context) => MenuPageView()),
+  );
+
+  // 🔴 Exibe um aviso ao usuário
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(content: Text('Logout realizado com sucesso!')),
+  );
 }
 
 class DebitWidgetState extends State<DebitWidget> {
@@ -59,13 +77,15 @@ class DebitWidgetState extends State<DebitWidget> {
               child: Stack(
                 children: [
                   Positioned(
-                    top: 10,
-                    child: Icon(
-                      Icons.settings,
-                      color: Colors.black,
-                      size: 40,
-                    ),
-                  ),
+                      top: 10,
+                      child: ElevatedButton(
+                        onPressed: () => logout(context),
+                        child: Icon(
+                          Icons.logout,
+                          color: Colors.black,
+                          size: 20,
+                        ),
+                      )),
                 ],
               ),
             ),
