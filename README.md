@@ -39,25 +39,25 @@ Este é o backend da aplicação **Projeto Studio**, um sistema de gerenciamento
 
 7. 📚 Endpoints principais
     👤 Usuários
-    POST /user/addUser — Cria um novo usuário
-
-    POST /user/login — Autentica e retorna token JWT
+    POST /user — Cria um novo usuário
+    POST /authentication — Autentica e retorna token JWT
+    GET  /user/cpf - busca um usuário
+    GET  /user - busca todos os usuários
+    PUT  /user/cpf - atualiza um usuario
+    DEL  /user/cpf - apaga um usuário 
+   
 
     💇‍♀️ Serviços
     POST /service/addService — Cadastra um novo serviço (funcionário)
-
     GET /service/getById/{id} — Busca um serviço por ID
-
     GET /service/all — Lista todos os serviços
 
     📅 Sessões
-    POST /session/create — Cria uma nova sessão (cliente)
+    POST /session/create — Cria uma nova sessão
+    GET /session/user/id — Busca um serviço por id
+    GET /session/all/cpf — Lista todas as sessões de uma pessoa
 
-    GET /session/user/{userId} — Lista sessões de um cliente
-
-    GET /session/all — Lista todas as sessões (funcionário)
-
-8. 👥 Tipos de usuário
+9. 👥 Tipos de usuário
      Tipo	                    Descrição
 
     Cliente	        Pode agendar e visualizar suas sessões
